@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rundeck-ingress
+  namespace: rundeck
+spec:
+  rules:
+    - host: rundeck.example.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: rundeck-server
+                port:
+                  number: 4440
+            path: /
+            pathType: Prefix

@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rundeck-server
+  namespace: rundeck
+spec:
+  selector:
+    stack: rundeck
+    instance: rundeck
+    app: server
+  ports:
+    - name: http
+      port: 4440
+      protocol: TCP
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: rundeck
+  name: database
+spec:
+  selector:
+    stack: rundeck
+    instance: rundeck
+    app: database
+  ports:
+    - name: db
+      port: 5432
+      protocol: TCP
+      targetPort: db

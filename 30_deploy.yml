@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rundeck-db
+  namespace: rundeck
+  labels:
+    stack: rundeck
+    instance: rundeck
+    app: database
+spec:
+  selector:
+    matchLabels:
+      stack: rundeck
+      instance: rundeck
+      app: database
+  template:
+    metadata:
+      labels:
+        stack: rundeck
+        instance: rundeck
+        app: database
+    spec:
+      volumes:
+      - name: pvc-rundeck-database
+        persistentVolumeClaim:
+          claimName: pvc-rundeck-database
+      containers:
+        - imagePullPolicy: Always
+          name: container-0
+          image: postgres:16
+          envFrom:
+          - configMapRef:
+              name: rundeck-db-config
+          ports:
+          - name: db
+            protocol: TCP
+            containerPort: 5432
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: pvc-rundeck-database
+      restartPolicy: Always
+  replicas: 1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rundeck-server
+  namespace: rundeck
+  labels:
+    stack: rundeck
+    instance: rundeck
+    app: server
+spec:
+  selector:
+    matchLabels:
+      stack: rundeck
+      instance: rundeck
+      app: server
+  template:
+    metadata:
+      labels:
+        stack: rundeck
+        instance: rundeck
+        app: server
+    spec:
+      volumes:
+      - name: pvc-rundeck-data
+        persistentVolumeClaim:
+          claimName: pvc-rundeck-data
+      - name: pvc-rundeck-ssh
+        persistentVolumeClaim:
+          claimName: pvc-rundeck-ssh
+      containers:
+        - imagePullPolicy: Always
+          name: container-0
+          image: rundeck/rundeck:4.17.0
+          envFrom:
+          - configMapRef:
+              name: rundeck-config
+          ports:
+          - name: http
+            protocol: TCP
+            containerPort: 4440
+          volumeMounts:
+          - mountPath: /home/rundeck/server/data
+            name: pvc-rundeck-data
+          - mountPath: /home/rundeck/.ssh
+            name: pvc-rundeck-ssh
+      restartPolicy: Always
+  replicas: 1

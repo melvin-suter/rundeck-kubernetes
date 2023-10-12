@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rundeck-db-config
+  namespace: rundeck
+data:
+  POSTGRES_USER: "rundeck"
+  POSTGRES_DB: "rundeck"
+  POSTGRES_PASSWORD: "superimportantpassword"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rundeck-config
+  namespace: rundeck
+data:
+  RUNDECK_DATABASE_DRIVER: "org.postgresql.Driver"
+  RUNDECK_DATABASE_USERNAME: "rundeck"
+  RUNDECK_DATABASE_PASSWORD: "superimportantpassword"
+  RUNDECK_SERVER_FORWARDED: "true"
+  RUNDECK_MAIL_SMTP_HOST: "smtp.example.com"
+  RUNDECK_MAIL_SMTP_PORT: "25"
+  RUNDECK_MAIL_FROM: "rundeck@example.com"
+  RUNDECK_DATABASE_URL: "jdbc:postgresql://database/rundeck"
