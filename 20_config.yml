@@ -22,3 +22,4 @@ data:
   RUNDECK_MAIL_SMTP_PORT: "25"
   RUNDECK_MAIL_FROM: "rundeck@example.com"
   RUNDECK_DATABASE_URL: "jdbc:postgresql://database/rundeck"
+  RUNDECK_GRAILS_URL: rundeck.example.com
